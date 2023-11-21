@@ -1,0 +1,23 @@
+{
+  "name": "healios/cache",
+  "description": "Cache provider",
+  "type": "library",
+  "autoload": {
+    "psr-4": {
+      "Healios\\Cache\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Grant MacDonald",
+      "email": "grant.macdonald@healios.io"
+    }
+  ],
+  "require": {
+    "php": "^8.2",
+    "predis/predis": "^2.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^10.4"
+  }
+}
