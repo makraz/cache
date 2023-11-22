@@ -1,1 +1,5 @@
-./vendor/*
+vendor/*
+.idea/
+.ddev/
+.phpunit.cache/
+build/

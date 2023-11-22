@@ -7,6 +7,11 @@
       "Healios\\Cache\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Healios\\Cache\\Tests\\": "tests/"
+    }
+  },
   "authors": [
     {
       "name": "Grant MacDonald",
@@ -18,6 +23,9 @@
     "predis/predis": "^2.2"
   },
   "require-dev": {
-    "phpunit/phpunit": "^10.4"
+    "phpunit/phpunit": "^10.4",
+    "phpstan/phpstan": "^1.10",
+    "brianium/paratest": "^7.3",
+    "friendsofphp/php-cs-fixer": "^3.39"
   }
 }

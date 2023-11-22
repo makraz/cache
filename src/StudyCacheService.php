@@ -1,43 +1,61 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Healios\Cache;
+
+use Healios\Cache\Exception\CacheQueryKeyRequiredException;
+use Healios\Cache\Exception\CacheQueryParametersRequiredException;
+use Healios\Cache\Exception\CacheQueryValueRequiredException;
+use Healios\Cache\Exception\CacheValueNotExistException;
+use Healios\Cache\Query\Enum\TypeEnum;
+use Healios\Cache\Query\QueryBuilder;
 
 class StudyCacheService
 {
-    private const STUDY_KEY_PATTERN = 'studies:{clientId}:{studyId}';
-
-    public function findById(string $studyId): ?array
+    public function __construct(
+        private readonly QueryBuilder $queryBuilder
+    )
     {
-        $builder = CacheQueryBuilder::start();
-        $builder->setMode('');
-        return $builder->setQueryKey(self::STUDY_KEY_PATTERN)
-            ->setQueryParams(['studyId' => $studyId])
-            ->setMode('array')
-            ->query();
     }
 
-    public function getByClientId(string $clientId): ?array
+    /**
+     * @throws CacheValueNotExistException
+     * @throws CacheQueryKeyRequiredException
+     * @throws CacheQueryParametersRequiredException
+     */
+    public function findById(string $studyId): string
     {
-        $builder = CacheQueryBuilder::start();
-        $builder->setMode('');
-        return $builder->setQueryKey(self::STUDY_KEY_PATTERN)
-            ->setQueryParams(['clientId' => $clientId])
-            ->setMode('array')
-            ->query();
+        return $this->queryBuilder
+            ->resource(TypeEnum::STUDY)
+            ->with('studyId', $studyId)
+            ->get();
     }
 
+    /**
+     * @throws CacheValueNotExistException
+     * @throws CacheQueryKeyRequiredException
+     * @throws CacheQueryParametersRequiredException
+     */
+    public function getByClientId(string $clientId): string
+    {
+        return $this->queryBuilder
+            ->resource(TypeEnum::STUDY)
+            ->with('clientId', $clientId)
+            ->get();
+    }
+
+    /**
+     * @throws CacheQueryValueRequiredException
+     * @throws CacheQueryParametersRequiredException
+     * @throws CacheQueryKeyRequiredException
+     */
     public function setStudy(string $clientId, string $studyId, mixed $study): void
     {
-        $provider = new ClientProvider();
-        $service = new CacheSetService(
-            $provider
-        );
-        $service->set(
-            $service->createRedisSetKey(self::STUDY_KEY_PATTERN, [
-                'clientId' => $clientId,
-                'studyId' => $studyId
-            ]),
-            $study
-        );
+        $this->queryBuilder
+            ->resource(TypeEnum::STUDY)
+            ->with('clientId', $clientId)
+            ->with('studyId', $studyId)
+            ->set($study);
     }
 }
